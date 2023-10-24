@@ -15,9 +15,22 @@ app.get("/", (req, res) => {
 app.post("/register", async (req, res) => {
   try {
     const data = req.body;
+    //This is to filter an array object of the vendor model and business info model
+    let = data;
+    const {
+      businessName,
+      businessType,
+      address,
+      licensed,
+      insured,
+      ownerName,
+    } = data;
+    {
+      firstName, lastName, email, password, phoneNumber;
+    }
     // This will check whether vendor's details already exist in the database
     const existingVendor = await prisma.vendor.findFirst({
-      data,
+      where: { email },
     });
     if (existingVendor) {
       return res.status(409).json({ massage: "Vendor has already registered" });
@@ -27,11 +40,24 @@ app.post("/register", async (req, res) => {
       password = hashedPassword;
       //Create the vendor and business info records with a transaction
       const newVendor = await prisma.vendor.create({
-        data,
+        data: { firstName, lastName, email, password, phoneNumber },
+      });
+
+      const businessInfo = await prism.businessInfo.create({
+        businessName,
+        businessType,
+        address,
+        licensed,
+        insured,
+        ownerName,
       });
       res
         .status(201)
-        .json({ massage: "Vendor successfully registered", vendor: newVendor });
+        .json({
+          massage: "Vendor successfully registered",
+          vendor: newVendor,
+          Business: businessInfo,
+        });
     }
   } catch (error) {
     console.error(error);

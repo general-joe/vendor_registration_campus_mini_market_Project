@@ -30,9 +30,10 @@ model BusinessInfo {
   licensed     String @default("No")
   insured      String @default("No")
   ownerName    String
-  vendorId     Int
 
-  vendor    Vendor   @relation(fields: [vendorId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  Vendor   Vendor? @relation(fields: [vendorId], references: [id])
+  vendorId Int?
 }
