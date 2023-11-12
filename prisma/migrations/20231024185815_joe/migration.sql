@@ -18,12 +18,12 @@ CREATE TABLE "BusinessInfo" (
     "businessName" TEXT NOT NULL,
     "businessType" TEXT NOT NULL,
     "address" TEXT NOT NULL,
-    "licensed" BOOLEAN NOT NULL,
-    "insured" BOOLEAN NOT NULL,
+    "licensed" TEXT NOT NULL DEFAULT 'No',
+    "insured" TEXT NOT NULL DEFAULT 'No',
     "ownerName" TEXT NOT NULL,
-    "vendorId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "vendorId" INTEGER,
 
     CONSTRAINT "BusinessInfo_pkey" PRIMARY KEY ("id")
 );
@@ -32,4 +32,4 @@ CREATE TABLE "BusinessInfo" (
 CREATE UNIQUE INDEX "Vendor_email_key" ON "Vendor"("email");
 
 -- AddForeignKey
-ALTER TABLE "BusinessInfo" ADD CONSTRAINT "BusinessInfo_vendorId_fkey" FOREIGN KEY ("vendorId") REFERENCES "Vendor"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "BusinessInfo" ADD CONSTRAINT "BusinessInfo_vendorId_fkey" FOREIGN KEY ("vendorId") REFERENCES "Vendor"("id") ON DELETE SET NULL ON UPDATE CASCADE;
