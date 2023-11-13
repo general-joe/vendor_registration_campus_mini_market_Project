@@ -23,6 +23,7 @@ app.post("/register", async (req, res) => {
       //Hash the password before storing it
       const hashedPassword = await bcrypt.hash(password, 10);
       password = hashedPassword;
+
       //Create the vendor and business info records with a transaction
 
       const newVendor = await prisma.vendor.create({
@@ -43,6 +44,20 @@ app.post("/register", async (req, res) => {
         vendor: newVendor,
       });
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ massage: "Internal Server Error" });
+  }
+});
+
+app.get("/register/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  try {
+    const getSingleVendor = await prisma.vendor.findUnique({
+      where: { id },
+      include: { business: true },
+    });
+    res.status(200).json({ getSingleVendor });
   } catch (error) {
     console.error(error);
     res.status(500).json({ massage: "Internal Server Error" });
