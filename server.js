@@ -51,7 +51,7 @@ app.post("/register", async (req, res) => {
 });
 
 app.get("/register/:id", async (req, res) => {
-  const id = parseInt(req.params.id);
+  const id =req.params.id;
   try {
     const getSingleVendor = await prisma.vendor.findUnique({
       where: { id },
