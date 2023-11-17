@@ -20,11 +20,11 @@ app.post("/register", async (req, res) => {
     if (existingVendor) {
       return res.status(409).json({ massage: "Vendor has already registered" });
     } else {
-      //Hash the password before storing it
+      //Hash the password before storing it in the database
       const hashedPassword = await bcrypt.hash(password, 10);
       password = hashedPassword;
 
-      //Create the vendor and business info records with a transaction
+      //This line of code is going to create a vendor
 
       const newVendor = await prisma.vendor.create({
         data: {
@@ -50,14 +50,33 @@ app.post("/register", async (req, res) => {
   }
 });
 
+//This code is use to get a single vendor by id
+
 app.get("/register/:id", async (req, res) => {
-  const id =req.params.id;
+  const id = req.params.id;
   try {
     const getSingleVendor = await prisma.vendor.findUnique({
       where: { id },
       include: { business: true },
     });
     res.status(200).json({ getSingleVendor });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ massage: "Internal Server Error" });
+  }
+});
+
+//This code is for updating a vendor
+app.patch("/register/:id", async (req, res) => {
+  const id = req.params.id;
+  const data = req.body;
+  try {
+    const updateVendor = await prisma.vendor.update({
+      where: { id },
+      include: { business: true },
+      data,
+    });
+    res.status(200).json({ updateVendor });
   } catch (error) {
     console.error(error);
     res.status(500).json({ massage: "Internal Server Error" });

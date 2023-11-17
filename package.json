@@ -2,7 +2,7 @@
   "name": "vendor_registration_campus_mini_market_project",
   "version": "1.0.0",
   "description": "vendor_registration",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "devStart": "nodemon server.js",
     "start": "node server.js",
