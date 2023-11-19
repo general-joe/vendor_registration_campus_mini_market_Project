@@ -4,7 +4,9 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const PORT = process.env.PORT || 6060;
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+const PORT = process.env.PORT;
 
 app.use(express.json());
 app.use(cors({ origin: true, credentials: true }));
@@ -77,6 +79,26 @@ app.patch("/register/:id", async (req, res) => {
       data,
     });
     res.status(200).json({ updateVendor });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ massage: "Internal Server Error" });
+  }
+});
+
+//Vendor authentication endpoint
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const vendor = await prisma.vendor.findUnique({
+      where: { email },
+      include: { business: true },
+    });
+    if (!vendor || !(await bcrypt.compare(password, vendor.password))) {
+      return res.status(401).json({ massage: "Invalid credentials" });
+    } else {
+      const token = jwt.sign({ userId: vendor.id }, process.env.SECRET_KEY);
+      res.json({ token, vendor });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ massage: "Internal Server Error" });
