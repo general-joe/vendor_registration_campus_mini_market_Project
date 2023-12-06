@@ -33,15 +33,17 @@ const vendorValidationRules = [
     .exists()
     .withMessage("Phone number is required")
     .notEmpty()
-    .withMessage("Phone number is required"),
-  // .isMobilePhone()
-  // .withMessage("Phone number is invalid")
-  // .custom((value, { req }) => {
-  //   if (!validator.isMobilePhone(value, "en-GH")) {
-  //     throw new Error("Phone number is not associated with Ghana");
-  //   }
-  //   return true;
-  // }),
+    .withMessage("Phone number is required")
+    .isMobilePhone()
+    .withMessage("Phone number is invalid")
+    .custom((value, { req }) => {
+      if (!validator.isMobilePhone(value, "en-GH")) {
+        throw new Error("Phone number is not associated with Ghana");
+      } else {
+      return true;
+      }
+     
+    }),
 ];
 
 module.exports = vendorValidationRules;
